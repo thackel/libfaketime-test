@@ -1,14 +1,14 @@
-FROM centos:centos7
+FROM alpine:3
 
-RUN yum -y install git make gcc \
+RUN apk update \
+    && apk add --no-cache git make gcc libc-dev bash \
     && git clone https://github.com/wolfcw/libfaketime.git \
     && cd libfaketime \
     && git checkout v0.9.8 \
     && make install \
     && cd .. \
     && rm -R libfaketime \
-    && yum -y remove git make gcc \
-    && yum clean all
+    && apk del git make gcc
 
 ENV LD_PRELOAD=/usr/local/lib/faketime/libfaketime.so.1
 ENV FAKETIME_DONT_FAKE_MONOTONIC=1
